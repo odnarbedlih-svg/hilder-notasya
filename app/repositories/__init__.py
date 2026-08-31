@@ -1,0 +1,3 @@
+from app.repositories.estudiante_repository import EstudianteRepository
+from app.repositories.profesor_repository import ProfesorRepository
+from app.repositories.curso_repository import CursoRepository

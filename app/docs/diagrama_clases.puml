@@ -1,0 +1,102 @@
+@startuml Diagrama_Clases_NOTASYA
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+
+package "models (Entidades de Dominio)" {
+    class Estudiante {
+        - id: Integer [PK]
+        - nombre: String
+        - telefono: String
+        - correo: String [Unique]
+    }
+
+    class Profesor {
+        - id: Integer [PK]
+        - nombre: String
+        - tipo_identificacion: String
+        - numero_identificacion: String [Unique]
+        - especialidad: String
+    }
+
+    class Curso {
+        - id: Integer [PK]
+        - nombre: String
+        - estudiante_id: Integer [FK]
+        - profesor_id: Integer [FK]
+        - calificacion: Float
+    }
+
+    Estudiante "1" *-- "0..*" Curso : matricula
+    Profesor "1" *-- "0..*" Curso : dicta
+}
+
+package "dtos (Esquemas de Transferencia)" {
+    class EstudianteCreateDTO {
+        + nombre: str
+        + telefono: str
+        + correo: EmailStr
+    }
+    class EstudianteResponseDTO {
+        + id: int
+        + nombre: str
+        + telefono: str
+        + correo: str
+    }
+    class CursoCreateDTO {
+        + nombre: str
+        + estudiante_id: int
+        + profesor_id: int
+        + calificacion: float
+    }
+    class CursoResponseDTO {
+        + id: int
+        + nombre: str
+        + calificacion: float
+    }
+}
+
+package "repositories (Acceso a Datos)" {
+    interface IBaseRepository<T> {
+        + get_all(): List<T>
+        + get_by_id(id: int): T
+        + create(entity: T): T
+        + update(entity: T): T
+    }
+    class EstudianteRepository implements IBaseRepository
+    class ProfesorRepository implements IBaseRepository
+    class CursoRepository implements IBaseRepository
+}
+
+package "services (Reglas de Negocio)" {
+    class EstudianteService {
+        - repository: EstudianteRepository
+        + obtener_todos_los_estudiantes(): List<EstudianteResponseDTO>
+        + crear_estudiante(dto: EstudianteCreateDTO): EstudianteResponseDTO
+        + actualizar_estudiante(id: int, dto: EstudianteUpdateDTO): EstudianteResponseDTO
+    }
+    class CursoService {
+        - curso_repo: CursoRepository
+        - estudiante_repo: EstudianteRepository
+        - profesor_repo: ProfesorRepository
+        + crear_curso(dto: CursoCreateDTO): CursoResponseDTO
+    }
+}
+
+package "controllers (Presentación API)" {
+    class EstudianteController {
+        + obtener_todos()
+        + crear(dto: EstudianteCreateDTO)
+    }
+    class CursoController {
+        + obtener_todos()
+        + crear(dto: CursoCreateDTO)
+    }
+}
+
+EstudianteController --> EstudianteService
+CursoController --> CursoService
+EstudianteService --> EstudianteRepository
+CursoService --> CursoRepository
+EstudianteRepository ..> Estudiante : persiste
+CursoRepository ..> Curso : persiste
+@enduml

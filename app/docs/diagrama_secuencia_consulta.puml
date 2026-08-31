@@ -1,0 +1,31 @@
+@startuml Diagrama_Secuencia_Consulta_NOTASYA
+actor Cliente as "Cliente HTTP / Frontend"
+boundary Controller as "EstudianteController"
+control Service as "EstudianteService"
+entity Repository as "EstudianteRepository"
+database PostgreSQL as "PostgreSQL DB"
+
+Cliente -> Controller : GET /api/v1/estudiantes/correo/hilder@umanizales.edu.co
+activate Controller
+
+Controller -> Service : obtener_estudiante_por_correo("hilder@umanizales.edu.co")
+activate Service
+
+Service -> Repository : get_by_correo("hilder@umanizales.edu.co")
+activate Repository
+
+Repository -> PostgreSQL : SELECT * FROM estudiantes WHERE correo = ...
+activate PostgreSQL
+PostgreSQL --> Repository : Registro encontrado (Entity Estudiante)
+deactivate PostgreSQL
+
+Repository --> Service : Estudiante Object
+deactivate Repository
+
+Service -> Service : model_validate() -> EstudianteResponseDTO
+Service --> Controller : EstudianteResponseDTO
+deactivate Service
+
+Controller --> Cliente : HTTP 200 OK + JSON {id, nombre, telefono, correo}
+deactivate Controller
+@enduml

@@ -1,0 +1,76 @@
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+from app.main import app
+from app.config.database import Base, get_db
+
+# Base de datos SQLite en memoria con StaticPool para persistir el esquema en la sesión de pruebas
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool
+)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Crear tablas en el engine de pruebas
+Base.metadata.create_all(bind=engine)
+
+def override_get_db():
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+app.dependency_overrides[get_db] = override_get_db
+client = TestClient(app)
+
+def test_health_check():
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json()["status"] == "online"
+
+def test_flujo_completo_notasya():
+    # 1. Crear Estudiante
+    est_resp = client.post("/api/v1/estudiantes", json={
+        "nombre": "Hilder Tangarife",
+        "telefono": "3101234567",
+        "correo": "hilder@umanizales.edu.co"
+    })
+    assert est_resp.status_code == 201
+    est_id = est_resp.json()["id"]
+
+    # 2. Crear Profesor
+    prof_resp = client.post("/api/v1/profesores", json={
+        "nombre": "Dr. Jorge Aguirre",
+        "tipo_identificacion": "CC",
+        "numero_identificacion": "1053800900",
+        "especialidad": "Arquitectura de Software"
+    })
+    assert prof_resp.status_code == 201
+    prof_id = prof_resp.json()["id"]
+
+    # 3. Crear Curso
+    curso_resp = client.post("/api/v1/cursos", json={
+        "nombre": "Diseño de Sistemas de Información",
+        "estudiante_id": est_id,
+        "profesor_id": prof_id,
+        "calificacion": 5.0
+    })
+    assert curso_resp.status_code == 201
+    assert curso_resp.json()["calificacion"] == 5.0
+
+    # 4. Consultar Estudiante por Correo
+    get_correo_resp = client.get("/api/v1/estudiantes/correo/hilder@umanizales.edu.co")
+    assert get_correo_resp.status_code == 200
+    assert get_correo_resp.json()["nombre"] == "Hilder Tangarife"
+
+    # 5. Probar Regla de Negocio: Correo Duplicado (409 Conflict)
+    dup_resp = client.post("/api/v1/estudiantes", json={
+        "nombre": "Otro Estudiante",
+        "telefono": "3119998877",
+        "correo": "hilder@umanizales.edu.co"
+    })
+    assert dup_resp.status_code == 409

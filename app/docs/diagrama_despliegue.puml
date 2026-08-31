@@ -1,0 +1,26 @@
+@startuml Diagrama_Despliegue_NOTASYA
+node "Dispositivo Cliente" {
+    artifact "Navegador Web / Swagger Docs / Postman" as Cliente
+}
+
+node "Plataforma de Despliegue (Railway / Vercel / Cloud)" {
+    node "Contenedor de Aplicación (Linux)" {
+        component "FastAPI REST API" as FastAPI
+        component "Servidor ASGI Uvicorn" as Uvicorn
+        Uvicorn --> FastAPI
+    }
+}
+
+node "Servidor de Base de Datos" {
+    database "PostgreSQL 16" as PostgresDB {
+        frame "Tablas Relacionales" {
+            [estudiantes]
+            [profesores]
+            [cursos]
+        }
+    }
+}
+
+Cliente --> Uvicorn : HTTPS / REST JSON (Puerto 443/8000)
+FastAPI --> PostgresDB : Conexión TCP / SQLAlchemy (Puerto 5432)
+@enduml

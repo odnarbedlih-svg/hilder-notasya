@@ -1,0 +1,48 @@
+@startuml Diagrama_Secuencia_Creacion_NOTASYA
+actor Cliente as "Cliente HTTP / Frontend"
+boundary Controller as "CursoController"
+control Service as "CursoService"
+entity EstRepo as "EstudianteRepository"
+entity ProfRepo as "ProfesorRepository"
+entity CursoRepo as "CursoRepository"
+database PostgreSQL as "PostgreSQL DB"
+
+Cliente -> Controller : POST /api/v1/cursos {nombre, estudiante_id: 1, profesor_id: 2, calificacion: 4.5}
+activate Controller
+
+Controller -> Service : crear_curso(CursoCreateDTO)
+activate Service
+
+Service -> EstRepo : get_by_id(1)
+activate EstRepo
+EstRepo -> PostgreSQL : SELECT * FROM estudiantes WHERE id = 1
+activate PostgreSQL
+PostgreSQL --> EstRepo : Estudiante encontrado
+deactivate PostgreSQL
+EstRepo --> Service : Estudiante OK
+deactivate EstRepo
+
+Service -> ProfRepo : get_by_id(2)
+activate ProfRepo
+ProfRepo -> PostgreSQL : SELECT * FROM profesores WHERE id = 2
+activate PostgreSQL
+PostgreSQL --> ProfRepo : Profesor encontrado
+deactivate PostgreSQL
+ProfRepo --> Service : Profesor OK
+deactivate ProfRepo
+
+Service -> CursoRepo : create(Nuevo Curso)
+activate CursoRepo
+CursoRepo -> PostgreSQL : INSERT INTO cursos (nombre, estudiante_id, ...) VALUES (...)
+activate PostgreSQL
+PostgreSQL --> CursoRepo : Curso guardado (ID: 10)
+deactivate PostgreSQL
+CursoRepo --> Service : Curso Entity
+deactivate CursoRepo
+
+Service --> Controller : CursoResponseDTO
+deactivate Service
+
+Controller --> Cliente : HTTP 201 Created + JSON {id: 10, nombre: "Diseño Sistemas", ...}
+deactivate Controller
+@enduml

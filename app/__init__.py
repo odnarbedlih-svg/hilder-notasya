@@ -1,0 +1,1 @@
+"""NOTASYA Application Package"""
