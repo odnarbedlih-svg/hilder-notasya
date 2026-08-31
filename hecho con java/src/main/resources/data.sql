@@ -1,6 +1,6 @@
 -- Datos iniciales para NOTASYA (Universidad de Manizales)
-INSERT INTO estudiantes (nombre, telefono, correo) VALUES ('Hilder Tangarife', '3101234567', 'hilder@umanizales.edu.co');
-INSERT INTO estudiantes (nombre, telefono, correo) VALUES ('Johntatan Sierra', '3209876543', 'johntatan@umanizales.edu.co');
+INSERT INTO estudiantes (nombre, telefono, correo) VALUES ('Hildebrando Tangarife Cardona', '3101234567', 'htangarife@umanizales.edu.co');
+INSERT INTO estudiantes (nombre, telefono, correo) VALUES ('Hildebrando Tangarife Cardona', '3209876543', 'htangarife@umanizales.edu.co');
 INSERT INTO estudiantes (nombre, telefono, correo) VALUES ('Laura Valentina Gómez', '3158889900', 'lgomez@umanizales.edu.co');
 
 INSERT INTO profesores (nombre, tipo_identificacion, numero_identificacion, especialidad) VALUES ('Dr. Jorge Luis Aguirre', 'CC', '1053800900', 'Diseño y Arquitectura de Software');

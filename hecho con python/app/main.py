@@ -21,8 +21,8 @@ app = FastAPI(
     Desarrollado para la **Facultad de Ciencias e Ingeniería - Universidad de Manizales**.
     
     **Integrantes:**
-    - Hilder Tangarife
-    - Johntatan Sierra
+    - Hildebrando Tangarife Cardona
+    - Hildebrando Tangarife Cardona
     
     **Características:**
     - Arquitectura por capas (DTOs -> Controllers -> Services -> Repositories).

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Punto de entrada principal para la aplicación NOTASYA en Java Spring Boot.
  * Desarrollado para la Facultad de Ciencias e Ingeniería - Universidad de Manizales.
- * Integrantes: Hilder Tangarife y Johntatan Sierra.
+ * Integrantes: Hildebrando Tangarife Cardona.
  */
 @SpringBootApplication
 public class NotasyaApplication {

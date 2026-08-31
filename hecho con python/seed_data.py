@@ -17,8 +17,8 @@ def seed():
     print("Insertando datos iniciales de prueba para NOTASYA...")
 
     # Estudiantes
-    e1 = Estudiante(nombre="Hilder Tangarife", telefono="3101234567", correo="hilder@umanizales.edu.co")
-    e2 = Estudiante(nombre="Johntatan Sierra", telefono="3209876543", correo="johntatan@umanizales.edu.co")
+    e1 = Estudiante(nombre="Hildebrando Tangarife Cardona", telefono="3101234567", correo="htangarife@umanizales.edu.co")
+    e2 = Estudiante(nombre="Hildebrando Tangarife Cardona", telefono="3209876543", correo="htangarife@umanizales.edu.co")
     e3 = Estudiante(nombre="Laura Valentina Gómez", telefono="3158889900", correo="lgomez@umanizales.edu.co")
     e4 = Estudiante(nombre="Mateo Arango Osorio", telefono="3184443322", correo="marango@umanizales.edu.co")
     db.add_all([e1, e2, e3, e4])

@@ -13,17 +13,17 @@ def test_singleton_database():
 
 def test_factory_method_dto():
     dto = DTOFactory.create_dto("estudiante", {
-        "nombre": "Johntatan Sierra",
+        "nombre": "Hildebrando Tangarife Cardona",
         "telefono": "3209876543",
-        "correo": "johntatan@umanizales.edu.co"
+        "correo": "htangarife@umanizales.edu.co"
     })
     assert isinstance(dto, EstudianteCreateDTO)
-    assert dto.nombre == "Johntatan Sierra"
+    assert dto.nombre == "Hildebrando Tangarife Cardona"
 
 def test_adapter_pattern():
     sdk = ExternalEmailProviderSDK()
     adapter = EmailNotificationAdapter(sdk)
-    result = adapter.send_notification("hilder@umanizales.edu.co", "Bienvenido a NOTASYA")
+    result = adapter.send_notification("htangarife@umanizales.edu.co", "Bienvenido a NOTASYA")
     assert result is True
 
 def test_strategy_pattern():

@@ -38,9 +38,9 @@ def test_observability_middleware_headers():
 def test_flujo_completo_notasya():
     # 1. Crear Estudiante
     est_resp = client.post("/api/v1/estudiantes", json={
-        "nombre": "Hilder Tangarife",
+        "nombre": "Hildebrando Tangarife Cardona",
         "telefono": "3101234567",
-        "correo": "hilder@umanizales.edu.co"
+        "correo": "htangarife@umanizales.edu.co"
     })
     assert est_resp.status_code == 201
     est_id = est_resp.json()["id"]
@@ -66,15 +66,15 @@ def test_flujo_completo_notasya():
     assert curso_resp.json()["calificacion"] == 5.0
 
     # 4. Consultar Estudiante por Correo
-    get_correo_resp = client.get("/api/v1/estudiantes/correo/hilder@umanizales.edu.co")
+    get_correo_resp = client.get("/api/v1/estudiantes/correo/htangarife@umanizales.edu.co")
     assert get_correo_resp.status_code == 200
-    assert get_correo_resp.json()["nombre"] == "Hilder Tangarife"
+    assert get_correo_resp.json()["nombre"] == "Hildebrando Tangarife Cardona"
 
     # 5. Probar Regla de Negocio: Correo Duplicado (409 Conflict)
     dup_resp = client.post("/api/v1/estudiantes", json={
         "nombre": "Otro Estudiante",
         "telefono": "3119998877",
-        "correo": "hilder@umanizales.edu.co"
+        "correo": "htangarife@umanizales.edu.co"
     })
     assert dup_resp.status_code == 409
 

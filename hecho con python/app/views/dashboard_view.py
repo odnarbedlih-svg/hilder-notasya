@@ -163,7 +163,7 @@ def get_dashboard_html() -> str:
     </main>
 
     <footer class="text-center py-6 text-xs text-slate-400 border-t mt-8">
-        NOTASYA &copy; 2026 - Taller de Diseño de Sistemas de Información · Hilder Tangarife & Johntatan Sierra
+        NOTASYA &copy; 2026 - Taller de Diseño de Sistemas de Información · Hildebrando Tangarife Cardona
     </footer>
 
     <script>

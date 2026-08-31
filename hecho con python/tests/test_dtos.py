@@ -5,17 +5,17 @@ from app.dtos.curso_dto import CursoCreateDTO
 
 def test_estudiante_dto_valido():
     dto = EstudianteCreateDTO(
-        nombre="Hilder Tangarife",
+        nombre="Hildebrando Tangarife Cardona",
         telefono="3101234567",
-        correo="hilder@umanizales.edu.co"
+        correo="htangarife@umanizales.edu.co"
     )
-    assert dto.nombre == "Hilder Tangarife"
-    assert dto.correo == "hilder@umanizales.edu.co"
+    assert dto.nombre == "Hildebrando Tangarife Cardona"
+    assert dto.correo == "htangarife@umanizales.edu.co"
 
 def test_estudiante_dto_correo_invalido():
     with pytest.raises(ValidationError):
         EstudianteCreateDTO(
-            nombre="Hilder Tangarife",
+            nombre="Hildebrando Tangarife Cardona",
             telefono="3101234567",
             correo="correo_no_valido"
         )

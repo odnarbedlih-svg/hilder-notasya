@@ -4,8 +4,8 @@
 **Facultad de Ciencias e Ingeniería — Universidad de Manizales**
 
 ### Integrantes del Proyecto:
-* **Hilder Tangarife**
-* **Johntatan Sierra**
+* **Hildebrando Tangarife Cardona**
+* **Hildebrando Tangarife Cardona**
 
 ---
 

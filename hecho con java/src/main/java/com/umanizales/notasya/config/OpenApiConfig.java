@@ -16,7 +16,7 @@ public class OpenApiConfig {
                         .title("NOTASYA - API RESTful de Gestión Académica (Java Edition)")
                         .version("1.0.0")
                         .description("Backend empresarial en Java Spring Boot 3 con Arquitectura por Capas, Patrones GoF y Principios SOLID.\n\n" +
-                                "**Integrantes:** Hilder Tangarife y Johntatan Sierra\n" +
+                                "**Integrantes:** Hildebrando Tangarife Cardona\n" +
                                 "**Institución:** Universidad de Manizales - Facultad de Ciencias e Ingeniería")
                         .contact(new Contact()
                                 .name("Soporte Académico NOTASYA")
