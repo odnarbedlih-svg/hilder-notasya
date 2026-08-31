@@ -1,16 +1,20 @@
+# Python
 __pycache__/
 *.py[cod]
-*$py.class
 .env
 .venv/
 venv/
-ENV/
 .pytest_cache/
-.coverage
-htmlcov/
-dist/
-build/
-*.egg-info/
-.DS_Store
+
+# Java
+target/
+*.class
+*.jar
+*.war
+.m2/
+
+# IDEs
 .idea/
 .vscode/
+*.iml
+.DS_Store

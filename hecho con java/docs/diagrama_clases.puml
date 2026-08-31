@@ -1,0 +1,56 @@
+@startuml Diagrama_Clases_Java_NOTASYA
+skinparam classAttributeIconSize 0
+
+package "com.umanizales.notasya.models" {
+    class Estudiante <<Entity>> {
+        - id: Long
+        - nombre: String
+        - telefono: String
+        - correo: String
+    }
+    class Profesor <<Entity>> {
+        - id: Long
+        - nombre: String
+        - tipoIdentificacion: String
+        - numeroIdentificacion: String
+        - especialidad: String
+    }
+    class Curso <<Entity>> {
+        - id: Long
+        - nombre: String
+        - calificacion: Double
+    }
+    Estudiante "1" *-- "0..*" Curso : matricula
+    Profesor "1" *-- "0..*" Curso : dicta
+}
+
+package "com.umanizales.notasya.repositories" {
+    interface EstudianteRepository <<JpaRepository>>
+    interface ProfesorRepository <<JpaRepository>>
+    interface CursoRepository <<JpaRepository>>
+}
+
+package "com.umanizales.notasya.services" {
+    class EstudianteService <<Service>>
+    class ProfesorService <<Service>>
+    class CursoService <<Service>>
+}
+
+package "com.umanizales.notasya.controllers" {
+    class EstudianteController <<RestController>>
+    class ProfesorController <<RestController>>
+    class CursoController <<RestController>>
+}
+
+EstudianteController --> EstudianteService
+ProfesorController --> ProfesorService
+CursoController --> CursoService
+
+EstudianteService --> EstudianteRepository
+ProfesorService --> ProfesorRepository
+CursoService --> CursoRepository
+
+EstudianteRepository ..> Estudiante : persists
+ProfesorRepository ..> Profesor : persists
+CursoRepository ..> Curso : persists
+@enduml

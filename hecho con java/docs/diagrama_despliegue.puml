@@ -1,0 +1,20 @@
+@startuml Diagrama_Despliegue_Java_NOTASYA
+node "Dispositivo Cliente" {
+    artifact "Navegador Web / Swagger / Postman" as Cliente
+}
+
+node "Servidor de Aplicación (Spring Boot)" {
+    node "JVM Container (Java 17 / Eclipse Temurin)" {
+        component "NOTASYA.jar" as SpringApp
+        component "Tomcat Embebido" as Tomcat
+        Tomcat --> SpringApp
+    }
+}
+
+node "Servidor de Base de Datos" {
+    database "PostgreSQL 16" as PostgresDB
+}
+
+Cliente --> Tomcat : HTTP / REST (Puerto 8080)
+SpringApp --> PostgresDB : JDBC / Hibernate (Puerto 5432)
+@enduml

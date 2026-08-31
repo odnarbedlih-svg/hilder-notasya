@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: notasya_java_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: notasya_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_java_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: notasya_java_app
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/notasya_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgrespassword
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_java_data:

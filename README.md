@@ -4,109 +4,89 @@
 **Facultad de Ciencias e Ingeniería — Universidad de Manizales**
 
 ### Integrantes del Proyecto:
-- **Hilder Tangarife**
-- **Johntatan Sierra**
+* **Hilder Tangarife**
+* **Johntatan Sierra**
 
 ---
 
-## 📌 Descripción del Proyecto
+## 📌 Presentación del Repositorio
 
-**NOTASYA** es una API RESTful empresarial desarrollada con **FastAPI**, **Python 3**, **SQLAlchemy** y **PostgreSQL**, diseñada bajo una **arquitectura por capas estricta** y aplicando principios **SOLID** y **Patrones de Diseño de Software** (GoF).
+Este repositorio contiene la solución completa al **Taller de Diseño de Sistemas de Información**, implementada y documentada en **dos arquitecturas tecnológicas empresariales**:
 
-El sistema permite gestionar de manera integral el ciclo académico gestionando:
-* **Estudiantes:** Registro, actualización y consulta por correo/ID.
-* **Profesores:** Registro, actualización y consulta por tipo y número de documento.
-* **Cursos:** Matriculación, asignación docente y registro de calificaciones con validación estricta de reglas de negocio.
-
----
-
-## 🏛️ Arquitectura por Capas
-
-El flujo de una solicitud sigue estrictamente la separación de responsabilidades:
 ```text
-Cliente (HTTP) ──> Controlador (FastAPI) ──> Servicio (Reglas de Negocio) ──> Repositorio (SQLAlchemy) ──> PostgreSQL
+hilder-notasya/
+│── hecho con python/        # Implementación en Python 3 + FastAPI + SQLAlchemy + PostgreSQL
+│── hecho con java/          # Implementación en Java 17 + Spring Boot 3 + Spring Data JPA + Hibernate
+│── .gitignore
+└── README.md                # Este documento de arquitectura
 ```
-* **`app/controllers/`**: Enruta las solicitudes HTTP, gestiona los códigos de estado y serializa las respuestas con DTOs.
-* **`app/services/`**: Implementa la lógica de negocio (validación de existencias, no duplicidad y coherencia de datos).
-* **`app/repositories/`**: Encapsula exclusivamente las consultas y persistencia hacia la base de datos PostgreSQL.
-* **`app/dtos/`**: Esquemas Pydantic para validación estricta de tipos en entradas y salidas.
-* **`app/models/`**: Entidades mapeadas mediante SQLAlchemy ORM.
+
+Ambas versiones cumplen con:
+1. **Arquitectura por Capas Estricta:** `DTOs -> Controladores -> Servicios -> Repositorios -> Base de Datos`.
+2. **Patrones de Diseño GoF:** *Singleton*, *Factory Method*, *Adapter* y *Strategy*.
+3. **Principios SOLID:** Demostrados y justificados en el código y pruebas.
+4. **Diagramas UML en PlantUML:** Clases, Secuencia de Consulta, Secuencia de Creación y Despliegue.
+5. **Dashboard Web Reactivo:** Interfaz visual con métricas, gráficos en vivo y registro.
+6. **Módulo de Analítica Académica:** Cálculo de promedios, tasas de aprobación y menciones de honor.
+7. **Observabilidad:** Middleware con encabezados `X-Process-Time` y `X-Request-ID`.
 
 ---
 
-## 🧩 Patrones de Diseño Implementados
+## 🐍 1. Versión en Python (`hecho con python/`)
 
-1. **Creacional - Singleton (`app/patterns/singleton.py`):**
-   * *Problema:* Evita la sobrecarga y fuga de conexiones en el pool de PostgreSQL.
-   * *Solución:* Mantiene una única instancia del motor `engine` y `SessionLocal`.
-2. **Creacional - Factory Method (`app/patterns/factory.py`):**
-   * *Problema:* Centraliza la creación y validación de DTOs según el tipo de entidad dinámica.
-3. **Estructural - Adapter (`app/patterns/adapter.py`):**
-   * *Problema:* Aísla la aplicación de proveedores externos de correo/mensajería.
-   * *Solución:* Adapta interfaces incompatibles de SDKs externos a la interfaz estándar `INotificationService`.
-4. **Comportamiento - Strategy (`app/patterns/strategy.py`):**
-   * *Problema:* Permite variar los algoritmos de evaluación y cálculo de calificaciones (Estándar, Honores) en tiempo de ejecución.
+### Tecnologías:
+* **FastAPI**, **Uvicorn**, **SQLAlchemy ORM**, **Pydantic V2**, **PostgreSQL / SQLite**, **Pytest**.
 
----
-
-## 💎 Evidencia de Principios SOLID
-
-* **S (Single Responsibility):** Los controladores solo enrutan, los servicios solo validan reglas y los repositorios solo interactúan con la BD.
-* **O (Open/Closed):** Nuevas estrategias de calificación o adaptadores de notificación se extienden sin modificar el código base.
-* **L (Liskov Substitution):** Los repositorios implementan `IBaseRepository[T]` y pueden ser sustituidos de forma transparente.
-* **I (Interface Segregation):** Interfaces pequeñas y enfocadas por entidad (`EstudianteRepository`, `ProfesorRepository`, `CursoRepository`).
-* **D (Dependency Inversion):** Los controladores y servicios reciben sus dependencias inyectadas mediante `Depends()` de FastAPI.
-
----
-
-## 📊 Diagramas UML (PlantUML)
-
-Los diagramas se encuentran en la carpeta `app/docs/`:
-* `diagrama_clases.puml`: Modelo conceptual con clases, atributos, métodos y asociaciones.
-* `diagrama_secuencia_consulta.puml`: Flujo de consulta GET por correo con todas las capas.
-* `diagrama_secuencia_creacion.puml`: Flujo de creación POST de Curso con validación de Estudiante y Profesor.
-* `diagrama_despliegue.puml`: Arquitectura de despliegue en contenedores y conexión a PostgreSQL.
-
----
-
-## 🚀 Instalación y Ejecución Local
-
-### 1. Clonar el repositorio y preparar entorno:
+### Cómo Ejecutar:
 ```bash
-git clone https://github.com/hilder-tangarife/hilder-notasya.git
-cd hilder-notasya
-
-# Crear entorno virtual
-python -m venv venv
-# Activar en Windows:
-.\venv\Scripts\activate
-# Activar en Linux/Mac:
-source venv/bin/activate
+cd "hecho con python"
 
 # Instalar dependencias
 pip install -r requirements.txt
-```
 
-### 2. Configurar variables de entorno:
-Copiar `.env.example` a `.env` y configurar la URL de PostgreSQL:
-```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/notasya_db
-```
+# Poblar datos iniciales
+python seed_data.py
 
-### 3. Ejecutar la API:
-```bash
-uvicorn app.main:app --reload --port 8000
+# Iniciar servidor
+python -m uvicorn app.main:app --reload --port 8000
 ```
-
-* **Documentación Interactiva Swagger:** [http://localhost:8000/docs](http://localhost:8000/docs)
-* **Documentación ReDoc:** [http://localhost:8000/redoc](http://localhost:8000/redoc)
-* **Endpoint de Salud:** [http://localhost:8000/health](http://localhost:8000/health)
+* 🎨 **Dashboard Web:** [http://localhost:8000/dashboard](http://localhost:8000/dashboard)
+* 📄 **Swagger UI:** [http://localhost:8000/docs](http://localhost:8000/docs)
+* 🧪 **Ejecutar Pruebas:** `pytest -v`
 
 ---
 
-## 🧪 Ejecución de Pruebas Unitarias y de Integración
+## ☕ 2. Versión en Java (`hecho con java/`)
 
-Para ejecutar la suite completa de pruebas:
+### Tecnologías:
+* **Java 17**, **Spring Boot 3.2**, **Spring Data JPA**, **Hibernate**, **PostgreSQL / H2**, **Jakarta Validation**, **Springdoc OpenAPI**.
+
+### Cómo Ejecutar:
 ```bash
-pytest -v
+cd "hecho con java"
+
+# Ejecutar con Maven
+mvn spring-boot:run
 ```
+* 🎨 **Dashboard Web:** [http://localhost:8080/](http://localhost:8080/)
+* 📄 **Swagger UI:** [http://localhost:8080/docs](http://localhost:8080/docs)
+* 🗄️ **Consola H2:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+
+---
+
+## 🧩 Patrones de Diseño Implementados en Ambos Proyectos
+
+1. **Creacional - Singleton:** Garantiza una única instancia del motor/conexión a la base de datos para optimizar recursos y evitar fugas en el pool de conexiones.
+2. **Creacional - Factory Method:** Centraliza la creación parametrizada de esquemas de transferencia (DTOs).
+3. **Estructural - Adapter:** Desacopla la lógica del sistema adaptando SDKs externos a una interfaz `INotificationService`.
+4. **Comportamiento - Strategy:** Permite intercambiar en tiempo de ejecución las políticas de calificación y evaluación académica (Estándar vs. Mención de Honor).
+
+---
+
+## 💎 Justificación de Principios SOLID
+
+* **S (Single Responsibility):** Los controladores únicamente gestionan el protocolo HTTP; los servicios contienen exclusivamente las reglas de negocio; los repositorios encapsulan el acceso a la base de datos.
+* **O (Open/Closed):** Nuevas estrategias de calificación o canales de notificación se añaden implementando contratos sin modificar el núcleo del software.
+* **L (Liskov Substitution):** Los repositorios y estrategias implementan interfaces genéricas abstractas y pueden sustituirse sin romper el comportamiento esperado.
+* **I (Interface Segregation):** Interfaces pequeñas y cohesivas segregadas por responsabilidad y entidad.
+* **D (Dependency Inversion):** Los módulos de alto nivel dependen de abstracciones inyectadas mediante inyección de dependencias (`Depends` en FastAPI / `@Autowired` en Spring Boot).
