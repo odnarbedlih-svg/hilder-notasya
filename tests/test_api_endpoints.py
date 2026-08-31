@@ -5,7 +5,6 @@ from sqlalchemy.pool import StaticPool
 from app.main import app
 from app.config.database import Base, get_db
 
-# Base de datos SQLite en memoria con StaticPool para persistir el esquema en la sesión de pruebas
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
@@ -14,7 +13,6 @@ engine = create_engine(
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Crear tablas en el engine de pruebas
 Base.metadata.create_all(bind=engine)
 
 def override_get_db():
@@ -31,6 +29,11 @@ def test_health_check():
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json()["status"] == "online"
+
+def test_observability_middleware_headers():
+    response = client.get("/health")
+    assert "x-process-time" in response.headers
+    assert "x-request-id" in response.headers
 
 def test_flujo_completo_notasya():
     # 1. Crear Estudiante
@@ -74,3 +77,11 @@ def test_flujo_completo_notasya():
         "correo": "hilder@umanizales.edu.co"
     })
     assert dup_resp.status_code == 409
+
+    # 6. Probar Endpoint de Analítica Académica
+    analitica_resp = client.get("/api/v1/analitica/resumen")
+    assert analitica_resp.status_code == 200
+    data = analitica_resp.json()
+    assert data["total_estudiantes"] >= 1
+    assert data["total_profesores"] >= 1
+    assert data["promedio_general"] == 5.0
